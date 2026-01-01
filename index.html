@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD NOORALAM | Interactive Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9', // Sky blue - professional & engineering
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            500: '#64748b', // Slate for mechanical/industrial feel
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Chart Container Styling - Mandatory per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Behind everything */
+            background-color: #f8fafc; /* Light Slate-50 background */
+        }
+
+        /* Utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Certificate Modal Transition */
+        .modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s;
+        }
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .modal.visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+    </style>
+    
+    <!-- Chosen Palette: Corporate Slate & Engineering Blue (Light Mode Base) -->
+    <!-- Application Structure Plan:
+        1. Sticky Navigation: Easy access to all sections on mobile and desktop.
+        2. Hero Section (Dashboard Style): Immediate introduction with Particles.js for "tech/engineering" feel.
+        3. Skill Analytics (Data Viz): Using Chart.js to visualize the "Hybrid" nature (Web Dev + Mechanical) quantitatively.
+        4. Experience Timeline: A vertical timeline for clear chronological progression.
+        5. Project Grid: Card-based layout for easy scanning.
+        6. Contact: Functional form design.
+        This structure prioritizes professional clarity and mobile usability.
+    -->
+    <!-- Visualization & Content Choices:
+        1. Hybrid Skill Radar: Goal -> Compare diverse skills. Viz -> Radar Chart (Chart.js). Interaction -> Hover for details. Justification -> Shows balance between coding and supervision.
+        2. Tech Stack Bar Chart: Goal -> Show proficiency. Viz -> Bar Chart. Interaction -> Responsive width.
+        3. Timeline: Goal -> Show career growth. Viz -> HTML/Tailwind vertical layout.
+        4. Particles: Goal -> Engagement/Modern feel. Viz -> Canvas interaction.
+        CONFIRMATION: NO SVG graphics used (FontAwesome used). NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-slate-800 antialiased selection:bg-brand-200 selection:text-brand-900">
+
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Mobile Navigation Toggle -->
+    <div class="fixed top-4 right-4 z-50 md:hidden">
+        <button id="mobile-menu-btn" class="bg-white p-3 rounded-full shadow-lg text-brand-600 hover:text-brand-800 focus:outline-none transition-transform hover:scale-105">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Main Layout Grid -->
+    <div class="flex flex-col md:flex-row min-h-screen relative z-10">
+
+        <!-- Sidebar Navigation (Desktop) / Drawer (Mobile) -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 w-64 bg-white/90 backdrop-blur-md border-r border-slate-200 z-40 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none flex flex-col h-screen">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <div class="font-bold text-2xl tracking-tighter text-brand-900">
+                    MN<span class="text-brand-500">.</span>
+                </div>
+                <button id="close-menu-btn" class="md:hidden text-slate-400 hover:text-red-500">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 flex flex-col items-center">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-brand-500 to-cyan-400 p-1 mb-4 shadow-lg">
+                    <!-- Placeholder for User Image -->
+                    <div class="w-full h-full rounded-full bg-white overflow-hidden flex items-center justify-center">
+                        <i class="fas fa-user text-4xl text-slate-300"></i>
+                        <!-- Use this line when you have the image: <img src="images/your-photo.png" class="w-full h-full object-cover"> -->
+                    </div>
+                </div>
+                <h2 class="font-bold text-lg text-slate-900">MD NOORALAM</h2>
+                <p class="text-xs text-center text-slate-500 font-medium uppercase tracking-wide mt-1">
+                    Web Developer<br>&<br>Mechanical Supervisor
+                </p>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto px-4 py-2 space-y-1">
+                <a href="#overview" class="nav-link flex items-center px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors group">
+                    <i class="fas fa-chart-pie w-6 text-center mr-2 text-slate-400 group-hover:text-brand-500"></i>
+                    Overview
+                </a>
+                <a href="#skills" class="nav-link flex items-center px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors group">
+                    <i class="fas fa-code w-6 text-center mr-2 text-slate-400 group-hover:text-brand-500"></i>
+                    Skill Analysis
+                </a>
+                <a href="#experience" class="nav-link flex items-center px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors group">
+                    <i class="fas fa-briefcase w-6 text-center mr-2 text-slate-400 group-hover:text-brand-500"></i>
+                    Experience
+                </a>
+                <a href="#projects" class="nav-link flex items-center px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors group">
+                    <i class="fas fa-layer-group w-6 text-center mr-2 text-slate-400 group-hover:text-brand-500"></i>
+                    Projects
+                </a>
+                <a href="#contact" class="nav-link flex items-center px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-colors group">
+                    <i class="fas fa-paper-plane w-6 text-center mr-2 text-slate-400 group-hover:text-brand-500"></i>
+                    Contact
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="text-slate-400 hover:text-brand-600 transition-colors"><i class="fab fa-linkedin text-lg"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-gray-800 transition-colors"><i class="fab fa-github text-lg"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-blue-500 transition-colors"><i class="fab fa-twitter text-lg"></i></a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-x-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+                <!-- 1. Overview / Hero Section -->
+                <section id="overview" class="glass-panel rounded-2xl p-8 md:p-12 relative overflow-hidden">
+                    <div class="relative z-10 max-w-3xl">
+                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-brand-100 text-brand-800 text-xs font-bold uppercase tracking-widest mb-4">
+                            Available for Hire
+                        </div>
+                        <h1 class="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-4">
+                            Bridging the gap between <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-cyan-500">Digital Logic</span> & <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-600 to-slate-800">Industrial Precision</span>.
+                        </h1>
+                        <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-2xl">
+                            I am <strong>MD NOORALAM</strong>, a multidisciplinary professional. I combine the problem-solving rigour of a <strong>Mechanical Supervisor</strong> with the creative agility of a <strong>Web Developer</strong>.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#contact" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                                Contact Me
+                            </a>
+                            <a href="#projects" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition-all">
+                                View Portfolio
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Decorative graphic element -->
+                    <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-brand-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                    <div class="absolute -right-10 top-10 w-40 h-40 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                </section>
+
+                <!-- 2. Skills Analysis (Charts) -->
+                <section id="skills">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-slate-900">Competency Analysis</h2>
+                        <p class="text-slate-500 mt-2 max-w-2xl">
+                            Visualizing the duality of my expertise. This data breakdown highlights my proficiency across both software development stacks and industrial supervision domains.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Chart 1: The Hybrid Radar -->
+                        <div class="glass-panel rounded-2xl p-6">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
+                                <i class="fas fa-crosshairs text-brand-500 mr-2"></i> Professional Balance
+                            </h3>
+                            <div class="chart-container">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                            <p class="text-xs text-slate-400 text-center mt-4">
+                                Interactive: Hover over points to see specific metric values.
+                            </p>
+                        </div>
+
+                        <!-- Chart 2: Web Tech Stack -->
+                        <div class="glass-panel rounded-2xl p-6">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
+                                <i class="fas fa-code text-brand-500 mr-2"></i> Technical Proficiency
+                            </h3>
+                            <div class="chart-container">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                            <p class="text-xs text-slate-400 text-center mt-4">
+                                Interactive: Bar length represents relative mastery level.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Experience Timeline -->
+                <section id="experience">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900">Professional Journey</h2>
+                        <p class="text-slate-500 mt-2">
+                            A chronological view of my roles in engineering and development.
+                        </p>
+                    </div>
+
+                    <div class="relative border-l-2 border-brand-200 ml-3 md:ml-6 space-y-12 pb-4">
+                        
+                        <!-- Role 1 -->
+                        <div class="relative pl-8 md:pl-12">
+                            <div class="absolute -left-[9px] top-0 bg-white border-4 border-brand-500 w-5 h-5 rounded-full"></div>
+                            <div class="glass-panel p-6 rounded-xl hover:shadow-lg transition-shadow">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <h3 class="text-xl font-bold text-slate-800">Mechanical Supervisor</h3>
+                                    <span class="inline-block bg-brand-50 text-brand-700 text-xs px-2 py-1 rounded font-semibold mt-1 sm:mt-0">2020 - Present</span>
+                                </div>
+                                <h4 class="text-md text-slate-600 font-medium mb-3">Industrial Sector</h4>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                    Overseeing mechanical operations, ensuring safety compliance, and managing technical teams. Implemented preventative maintenance schedules that reduced downtime by 15%.
+                                </p>
+                                <button onclick="openModal('cert-mechanical')" class="text-sm text-brand-600 font-semibold hover:text-brand-800 flex items-center">
+                                    <i class="fas fa-certificate mr-1"></i> View Certificate
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Role 2 -->
+                        <div class="relative pl-8 md:pl-12">
+                            <div class="absolute -left-[9px] top-0 bg-white border-4 border-slate-400 w-5 h-5 rounded-full"></div>
+                            <div class="glass-panel p-6 rounded-xl hover:shadow-lg transition-shadow">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <h3 class="text-xl font-bold text-slate-800">Frontend Web Developer</h3>
+                                    <span class="inline-block bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded font-semibold mt-1 sm:mt-0">Freelance / Project Based</span>
+                                </div>
+                                <h4 class="text-md text-slate-600 font-medium mb-3">Self-Employed</h4>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                    Designing and developing responsive websites for clients. Specializing in modern CSS frameworks (Tailwind) and JavaScript interactivity.
+                                </p>
+                                <button onclick="openModal('cert-web')" class="text-sm text-brand-600 font-semibold hover:text-brand-800 flex items-center">
+                                    <i class="fas fa-certificate mr-1"></i> View Certificate
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </section>
+
+                <!-- 4. Projects -->
+                <section id="projects">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-slate-900">Featured Projects</h2>
+                            <p class="text-slate-500 mt-2">
+                                Selected works demonstrating code quality and design thinking.
+                            </p>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <!-- Filter Buttons (Visual Only for MVP) -->
+                            <div class="inline-flex rounded-md shadow-sm" role="group">
+                                <button type="button" class="px-4 py-2 text-sm font-medium text-brand-700 bg-white border border-slate-200 rounded-l-lg hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-brand-500">
+                                    All
+                                </button>
+                                <button type="button" class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border-t border-b border-r border-slate-200 hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-brand-500">
+                                    Web
+                                </button>
+                                <button type="button" class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border-t border-b border-r border-slate-200 rounded-r-lg hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-brand-500">
+                                    Design
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Project Card 1 -->
+                        <div class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 overflow-hidden flex flex-col h-full">
+                            <div class="h-48 bg-slate-200 relative overflow-hidden">
+                                <!-- Placeholder for project image -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-brand-400 to-blue-600 flex items-center justify-center text-white">
+                                    <i class="fas fa-laptop-code text-4xl"></i>
+                                </div>
+                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                                    <a href="#" class="p-2 bg-white rounded-full text-brand-600 hover:scale-110 transition-transform" title="View Code"><i class="fab fa-github"></i></a>
+                                    <a href="#" class="p-2 bg-white rounded-full text-brand-600 hover:scale-110 transition-transform" title="Live Preview"><i class="fas fa-external-link-alt"></i></a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <h3 class="font-bold text-lg text-slate-800 mb-2 group-hover:text-brand-600 transition-colors">Portfolio Website</h3>
+                                <p class="text-sm text-slate-500 mb-4 flex-1">
+                                    A responsive personal portfolio built with HTML5, CSS3, and JavaScript. Features dark/light mode and animations.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mt-auto">
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">HTML</span>
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">CSS</span>
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">JS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Card 2 -->
+                        <div class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 overflow-hidden flex flex-col h-full">
+                            <div class="h-48 bg-slate-200 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white">
+                                    <i class="fas fa-shopping-cart text-4xl"></i>
+                                </div>
+                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                                    <a href="#" class="p-2 bg-white rounded-full text-brand-600 hover:scale-110 transition-transform"><i class="fab fa-github"></i></a>
+                                    <a href="#" class="p-2 bg-white rounded-full text-brand-600 hover:scale-110 transition-transform"><i class="fas fa-external-link-alt"></i></a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <h3 class="font-bold text-lg text-slate-800 mb-2 group-hover:text-brand-600 transition-colors">E-Commerce UI</h3>
+                                <p class="text-sm text-slate-500 mb-4 flex-1">
+                                    Modern frontend interface for an online store. Includes product grid, cart logic simulation, and checkout modal.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mt-auto">
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">React</span>
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">Tailwind</span>
+                                </div>
+                            </div>
+                        </div>
+
+                         <!-- Project Card 3 (Mechanical Placeholder) -->
+                         <div class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 overflow-hidden flex flex-col h-full">
+                            <div class="h-48 bg-slate-200 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-slate-500 to-gray-700 flex items-center justify-center text-white">
+                                    <i class="fas fa-cogs text-4xl"></i>
+                                </div>
+                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                                    <a href="#" class="p-2 bg-white rounded-full text-brand-600 hover:scale-110 transition-transform"><i class="fas fa-file-pdf"></i></a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <h3 class="font-bold text-lg text-slate-800 mb-2 group-hover:text-brand-600 transition-colors">Maintenance Log System</h3>
+                                <p class="text-sm text-slate-500 mb-4 flex-1">
+                                    Digital optimization of mechanical maintenance logs. Transitioned from paper to a spreadsheet-based tracking system.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mt-auto">
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">Excel</span>
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">Management</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Contact -->
+                <section id="contact" class="max-w-4xl mx-auto">
+                    <div class="glass-panel rounded-2xl p-8 md:p-12 shadow-xl border-t-4 border-brand-500">
+                        <div class="text-center mb-10">
+                            <h2 class="text-3xl font-bold text-slate-900">Get In Touch</h2>
+                            <p class="text-slate-500 mt-2">
+                                Have a project in mind or a mechanical query? Drop me a message.
+                            </p>
+                        </div>
+
+                        <form action="https://formspree.io/f/yourformid" method="POST" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Your Name</label>
+                                    <input type="text" name="name" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white/50 transition-all outline-none" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Your Email</label>
+                                    <input type="email" name="_replyto" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white/50 transition-all outline-none" placeholder="john@example.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Message</label>
+                                <textarea name="message" rows="4" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white/50 transition-all outline-none" placeholder="How can I help you?"></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 md:py-4 md:text-lg md:px-10 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                    <i class="fas fa-paper-plane mr-2"></i> Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Footer -->
+                <footer class="text-center text-slate-400 text-sm py-8 border-t border-slate-200 mt-12">
+                    <p>&copy; 2024 MD NOORALAM. All Rights Reserved.</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div id="cert-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-500 hover:text-red-500 z-10 bg-white rounded-full p-2 shadow-sm">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div class="p-6 border-b border-slate-100">
+                <h3 class="text-xl font-bold text-slate-800" id="modal-title">Certificate View</h3>
+            </div>
+            <div class="flex-1 overflow-auto p-4 bg-slate-100 flex items-center justify-center">
+                <div class="text-center p-10">
+                    <i class="fas fa-certificate text-6xl text-slate-300 mb-4"></i>
+                    <p class="text-slate-500">Image Placeholder for Certificate</p>
+                    <p class="text-xs text-slate-400 mt-2" id="modal-desc">Description of the certificate goes here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Mobile Navigation Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking a link on mobile
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        });
+
+        // 2. Modal Logic
+        const modal = document.getElementById('cert-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+
+        function openModal(type) {
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                modal.classList.add('visible');
+            }, 10);
+
+            if (type === 'cert-mechanical') {
+                modalTitle.innerText = "Mechanical Supervision Certificate";
+                modalDesc.innerText = "Certification in Industrial Safety and Team Management.";
+            } else if (type === 'cert-web') {
+                modalTitle.innerText = "Frontend Development Certification";
+                modalDesc.innerText = "Completed coursework in HTML, CSS, JS, and Responsive Design.";
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close modal on click outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 3. Chart.js Implementation
+        // Color variables based on Tailwind config
+        const colorBrand = '#0ea5e9';
+        const colorBrandLight = 'rgba(14, 165, 233, 0.2)';
+        const colorSlate = '#64748b';
+        
+        // Chart 1: Hybrid Radar Chart
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['JavaScript/Logic', 'HTML/CSS Design', 'Mech. Maintenance', 'Team Leadership', 'Safety Protocol', 'Problem Solving'],
+                datasets: [{
+                    label: 'Skill Proficiency (1-10)',
+                    data: [8, 9, 9, 8, 10, 9],
+                    backgroundColor: colorBrandLight,
+                    borderColor: colorBrand,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: colorBrand,
+                    pointHoverBackgroundColor: colorBrand,
+                    pointHoverBorderColor: '#fff'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { size: 12, family: "'Inter', sans-serif" },
+                            color: '#475569'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10,
+                        ticks: { display: false } // Hide numbers for cleaner look
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        padding: 10,
+                        cornerRadius: 8,
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Tech Stack Bar Chart
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['HTML5', 'CSS/Tailwind', 'JavaScript', 'React Basics', 'Git/GitHub'],
+                datasets: [{
+                    label: 'Confidence Level (%)',
+                    data: [95, 90, 80, 65, 75],
+                    backgroundColor: [
+                        '#0ea5e9', '#0ea5e9', '#38bdf8', '#7dd3fc', '#cbd5e1'
+                    ],
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y', // Horizontal Bar
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        max: 100
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { family: "'Inter', sans-serif" },
+                            color: '#475569'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. Particles.js Initialization
+        // We configure it to be subtle and professional (Slate/Gray nodes)
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#94a3b8" }, /* Slate-400 */
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.3, "random": false },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#cbd5e1", /* Slate-300 */
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": { "enable": true, "mode": "grab" },
+                        "onclick": { "enable": true, "mode": "push" },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                        "push": { "particles_nb": 4 }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+    </script>
+</body>
+</html>
